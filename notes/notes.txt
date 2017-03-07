@@ -1,0 +1,85 @@
+
+
+# notation
+
+    :bm - bookmark
+
+
+# quick notes
+* 注意 incoming_form 中的标注
+* 注意 incoming_form 中, self/this.pause() 的使用时机，由于 file.write 没有完成，所以需要先 pause 掉上边的数据流
+* 这个项目的 multipart_parser 好复杂, 状态流转太麻烦了
+* 这异步IO的真是复杂
+
+
+
+
+
+http:
+
+    Transfer-Encoding: 定义了传输 http entity 的编码
+        * The Transfer-Encoding header specifies the form of encoding used to safely transfer the entity to the user.
+        https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding
+
+        // Several values can be listed, separated by a comma
+        Transfer-Encoding: gzip, chunked
+
+    http entity:
+        https://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html
+
+        entity 应该就是 http 的 payload ，get 或者 post \r\n * 2 之后的内容, 或者文件上传中的多个 field。
+
+        http entity 包括两部分, entity header & entity body.
+
+        * entity header: 用于定义 entity body 的属性的，比如说 content type, Encoding 等信息
+
+             * content type
+                https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
+                https://www.w3.org/Protocols/rfc1341/4_Content-Type.html
+
+                application/octet-stream: 二进制数据流
+                
+            * content length
+                The Content-Length entity header is indicating the size of the entity-body, in decimal number of octets, sent to the recipient.
+
+        * entity body 二进制流, 具体解析需要根据 entity header 中的信息进行处理
+
+            entity-body := Content-Encoding( Content-Type( data ) )
+
+       
+
+    * multipart:
+    
+        POST /upload HTTP/1.1
+        Host: localhost:8080
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundarytyE4wkKlZ5CQJVTG
+        Content-Length: 1000
+
+        ------WebKitFormBoundarytyE4wkKlZ5CQJVTG
+        Content-Disposition: form-data; filename="plain.txt"; name="upload"
+        Content-Type: text/plain
+
+        I am a plain text file
+
+        ------WebKitFormBoundarytyE4wkKlZ5CQJVTG--
+
+
+
+* generate upload path
+    * os.tempDir()  + random filename
+    * random filename 
+
+        var buf = crypto.randomBytes(16);
+        var name = 'upload_' + buf.toString('hex');// 16*12 chars
+
+
+
+    
+
+todos:
+
+    pending:
+
+    done:
+
+        nodejs stream
